@@ -1,0 +1,40 @@
+# ====================
+# Router R0 Configuration
+# Role: GRE Tunnel Source Router
+# ====================
+
+hostname R0
+
+! ===== Tunnel =====
+interface Tunnel0
+ ip address 172.16.0.1 255.255.255.252
+ mtu 1476
+ tunnel source GigabitEthernet0/0/0
+ tunnel destination 10.0.0.10
+ no shutdown
+
+! ===== Underlay (to R1) =====
+interface GigabitEthernet0/0/0
+ ip address 10.0.0.1 255.255.255.252
+ ip access-group 100 out
+ no shutdown
+
+! ===== LAN (to PC0) =====
+interface GigabitEthernet0/0/1
+ ip address 192.168.1.1 255.255.255.0
+ no shutdown
+
+! ===== Routing =====
+ip route 10.0.0.10 255.255.255.255 10.0.0.2
+
+! ===== OSPF (Overlay only) =====
+router ospf 1
+ router-id 1.1.1.1
+ network 172.16.0.0 0.0.0.3 area 0
+ network 192.168.1.0 0.0.0.255 area 0
+
+! ===== ACL (Allow GRE only) =====
+access-list 100 permit gre host 10.0.0.1 host 10.0.0.10
+access-list 100 deny ip any any
+
+end
