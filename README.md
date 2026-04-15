@@ -16,6 +16,10 @@ The goal is to allow communication between two LANs while restricting traffic be
 ## 🏗️ Topology
 ![Topology](image.png)
 
+## 📂 Router Configurations
+
+All router configurations are organized in the `configs/` directory for clarity and reproducibility.
+
 ## ⚙️ How It Works
 - Underlay network (R0-R1-R2-R3) provides basic connectivity
 - GRE tunnel creates a virtual link between R0 and R3
