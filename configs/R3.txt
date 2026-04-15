@@ -1,0 +1,35 @@
+# ====================
+# Router R3 Configuration
+# Role: GRE Tunnel Destination Router
+# ====================
+
+hostname R3
+
+! ===== Tunnel =====
+interface Tunnel0
+ ip address 172.16.0.2 255.255.255.252
+ mtu 1476
+ tunnel source GigabitEthernet0/0/1
+ tunnel destination 10.0.0.1
+ no shutdown
+
+! ===== LAN (to PC1) =====
+interface GigabitEthernet0/0/0
+ ip address 192.168.2.1 255.255.255.0
+ no shutdown
+
+! ===== Underlay (to R2) =====
+interface GigabitEthernet0/0/1
+ ip address 10.0.0.10 255.255.255.252
+ no shutdown
+
+! ===== Routing =====
+ip route 10.0.0.1 255.255.255.255 10.0.0.9
+
+! ===== OSPF (Overlay only) =====
+router ospf 1
+ router-id 3.3.3.3
+ network 172.16.0.0 0.0.0.3 area 0
+ network 192.168.2.0 0.0.0.255 area 0
+
+end
